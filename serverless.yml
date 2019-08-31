@@ -1,0 +1,66 @@
+service: passwordless-python
+
+plugins:
+  - serverless-python-requirements
+  - serverless-pseudo-parameters
+
+custom:
+  pythonRequirements:
+    usePipenv: true
+    useStaticCache: false
+    slim: true
+    slimPatterns:
+      - "**/node_modules"
+      - "**/examples"
+      - "bin/*"
+      - "**/*.egg-info*"
+      - "**/*.pyi"
+  stage: ${opt:stage, self:provider.stage}
+
+package:
+  exclude:
+    - ./**
+  include:
+    - app/**
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  region: us-east-1
+  environment:
+    SES_FROM_ADDRESS: 'passwordless@fmhmail.online'
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'ses:SendEmail'
+      Resource: '*'
+
+functions:
+  define-auth-challenge:
+    handler: app.auth.define_auth_challenge
+
+  create-auth-challenge:
+    handler: app.auth.create_auth_challenge
+
+  verify-auth-challenge-response:
+    handler: app.auth.verify_auth_challenge_response
+
+  pre-sign-up:
+    handler: app.auth.pre_sign_up
+
+  hello:
+    handler: app.hello.main
+    events:
+      - http:
+          path: hello
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+
+resources:
+  - ${file(resources/api-gateway-errors.yml)}
+  - ${file(resources/challenge-permission.yml)}
+  - ${file(resources/cognito-identity-pool.yml)}
+  - ${file(resources/cognito-user-pool.yml)}

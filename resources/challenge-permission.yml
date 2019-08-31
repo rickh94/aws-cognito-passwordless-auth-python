@@ -1,0 +1,29 @@
+Resources:
+  CreateAuthChallengeInvocationPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: "#{AWS::StackName}-create-auth-challenge"
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: "#{CognitoUserPool.Arn}"
+  DefineAuthChallengeInvocationPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: "#{AWS::StackName}-define-auth-challenge"
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: "#{CognitoUserPool.Arn}"
+  VerifyAuthChallengeResponseInvocationPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: "#{AWS::StackName}-verify-auth-challenge-response"
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: "#{CognitoUserPool.Arn}"
+  PreSignUpInvocationPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: "#{AWS::StackName}-pre-sign-up"
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: "#{CognitoUserPool.Arn}"
