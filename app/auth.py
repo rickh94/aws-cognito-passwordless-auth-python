@@ -38,7 +38,8 @@ def create_auth_challenge(event, _context):
     else:
         previous_challenge = event["request"]["session"][-1]
         data = re.search(r"CODE-(\d*)", previous_challenge.get("challengeMetadata"))
-        secret_login_code = data.group()[0]
+        secret_login_code = data.group().split("-")[1]
+
     event["response"]["publicChallengeParameters"] = {
         "email": event["request"]["userAttributes"]["email"]
     }
