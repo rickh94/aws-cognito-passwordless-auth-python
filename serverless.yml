@@ -29,7 +29,7 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    SES_FROM_ADDRESS: 'passwordless@fmhmail.online'
+    SES_FROM_ADDRESS: ""
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
